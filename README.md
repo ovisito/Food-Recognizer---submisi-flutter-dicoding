@@ -7,6 +7,16 @@ Aplikasi ini mengusung penyimpanan lokal berbasis **Room Database** sehingga sel
 
 ---
 
+## 📸 Dokumentasi Simulasi Antarmuka (Screenshots)
+
+Berikut adalah tampilan visual asli dari hasil ujicoba simulasi aplikasi yang direkam langsung dari engine Roborazzi:
+
+| 📱 Layar Utama (Home Screen) | 📊 Hasil Analisis Gizi & Resep (Result Screen) |
+|:---:|:---:|
+| ![Home Screen](app/src/test/screenshots/home_screen.png) | ![Result Screen](app/src/test/screenshots/result_screen.png) |
+
+---
+
 ## 🎨 Preview & Tata Letak Antarmuka (ASCII Layout)
 
 Berikut adalah visualisasi tata letak antarmuka modern yang dikonfigurasi menggunakan **Jetpack Compose (Material Design 3)**:

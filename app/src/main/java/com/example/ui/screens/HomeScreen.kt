@@ -92,6 +92,36 @@ fun HomeScreen(
         return FileProvider.getUriForFile(context, "$appId.fileprovider", tempFile)
     }
 
+    HomeScreenContent(
+        history = history,
+        onCameraClick = {
+            val uri = getTempImageUri()
+            cameraTempUri.value = uri
+            cameraLauncher.launch(uri)
+        },
+        onGalleryClick = {
+            galleryLauncher.launch("image/*")
+        },
+        onLiveCameraClick = {
+            navController.navigate("live_camera")
+        },
+        onDeleteHistoryItem = { viewModel.deleteHistoryItem(it) },
+        onClearHistory = { viewModel.clearHistory() },
+        onHistoryItemClick = { navController.navigate("result_detail/${it.id}") }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreenContent(
+    history: List<ScannedFood>,
+    onCameraClick: () -> Unit,
+    onGalleryClick: () -> Unit,
+    onLiveCameraClick: () -> Unit,
+    onDeleteHistoryItem: (Int) -> Unit,
+    onClearHistory: () -> Unit,
+    onHistoryItemClick: (ScannedFood) -> Unit
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -121,7 +151,7 @@ fun HomeScreen(
                 ),
                 actions = {
                     if (history.isNotEmpty()) {
-                        IconButton(onClick = { viewModel.clearHistory() }) {
+                        IconButton(onClick = onClearHistory) {
                             Icon(
                                 imageVector = Icons.Default.DeleteSweep,
                                 contentDescription = "Hapus Semua Riwayat",
@@ -220,11 +250,7 @@ fun HomeScreen(
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             Button(
-                                onClick = {
-                                    val uri = getTempImageUri()
-                                    cameraTempUri.value = uri
-                                    cameraLauncher.launch(uri)
-                                },
+                                onClick = onCameraClick,
                                 modifier = Modifier
                                     .weight(1f)
                                     .height(54.dp)
@@ -240,7 +266,7 @@ fun HomeScreen(
                             }
 
                             Button(
-                                onClick = { galleryLauncher.launch("image/*") },
+                                onClick = onGalleryClick,
                                 modifier = Modifier
                                     .weight(1f)
                                     .height(54.dp)
@@ -259,7 +285,7 @@ fun HomeScreen(
                         // Real-Time Camera Stream Button (Advanced)
                         Spacer(modifier = Modifier.height(12.dp))
                         OutlinedButton(
-                            onClick = { navController.navigate("live_camera") },
+                            onClick = onLiveCameraClick,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(50.dp)
@@ -343,10 +369,8 @@ fun HomeScreen(
                 items(history, key = { it.id }) { food ->
                     HistoryItemCard(
                         food = food,
-                        onDelete = { viewModel.deleteHistoryItem(food.id) },
-                        onClick = {
-                            navController.navigate("result_detail/${food.id}")
-                        }
+                        onDelete = { onDeleteHistoryItem(food.id) },
+                        onClick = { onHistoryItemClick(food) }
                     )
                 }
             }
